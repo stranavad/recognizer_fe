@@ -25,3 +25,10 @@ export interface Item {
   updatedAt: string;
   deletedAt: string | null;
 }
+
+export interface GameItem {
+  itemId: number
+  image: string;
+  answers: string[]
+}
+

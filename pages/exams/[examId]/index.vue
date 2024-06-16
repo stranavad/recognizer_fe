@@ -14,6 +14,11 @@
       v-model="activeTab"
       :items="tabItems"
     >
+      <template #game>
+        <Game
+          :exam-id="examId"
+        />
+      </template>
       <template #groups>
         <Groups
           :exam-id="examId"
@@ -47,6 +52,10 @@ const {data: groups, refresh: refreshGroups} = await useFetch<Group[]>(`${apiUrl
 
 const activeTab = ref(0)
 const tabItems = [
+  {
+    label: 'Game',
+    slot: 'game'
+  },
   {
     label: 'Items',
     slot: 'items'
