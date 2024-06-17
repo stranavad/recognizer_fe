@@ -3,12 +3,18 @@
     <NuxtImg
       :src="`${imageBase}/${data.image}`"
     />
-    <span v-for="i in data.answers">
-      {{i}}
-    </span>
-    <UButton @click="refresh()">
-      NEXT
-    </UButton>
+    <div class="flex flex-col gap-2">
+      <UButton
+        v-for="i in data.answers"
+        :key="i"
+        :color="incorrectAnswers.includes(i) ? 'red' : 'primary'"
+        :disabled="incorrectAnswers.includes(i)"
+        variant="ghost"
+        @click="answer(i)"
+      >
+        {{i}}
+      </UButton>
+    </div>
   </div>
   <div v-else>
     <span>No items found</span>
@@ -23,5 +29,32 @@ const props = defineProps<{
 }>();
 
 const {data, refresh} = await useFetch<GameItem>(`${apiUrl}/game/${props.examId}`)
+
+const incorrectAnswers = ref<string[]>([])
+
+async function answer(answer: string){
+  if(!data.value){
+    return
+  }
+
+  if(incorrectAnswers.value.includes(answer)){
+    return
+  }
+
+  const res = await $fetch<{correct: boolean}>(`${apiUrl}/game/result`, {
+    method: "POST",
+    body: {
+      itemId: data.value.itemId,
+      answer
+    }
+  })
+
+  if(res.correct){
+    incorrectAnswers.value = [];
+    await refresh()
+  } else {
+    incorrectAnswers.value.push(answer)
+  }
+}
 </script>
 
