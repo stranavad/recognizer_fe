@@ -1,6 +1,7 @@
 <template>
-  <div v-if="data">
+  <div v-if="data" class="max-w-[500px] mx-auto mt-4">
     <NuxtImg
+        class="mb-2"
       :src="`${imageBase}/${data.image}`"
     />
     <div class="flex flex-col gap-2">
@@ -9,7 +10,7 @@
         :key="i"
         :color="incorrectAnswers.includes(i) ? 'red' : 'primary'"
         :disabled="incorrectAnswers.includes(i)"
-        variant="ghost"
+        variant="outline"
         @click="answer(i)"
       >
         {{i}}
